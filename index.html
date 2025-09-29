@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Case Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            color: #222;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+
+        .converter-box {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .input-section, .output-section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            resize: vertical;
+            background-color: #fafafa;
+            color: #333;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #ccc;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        button {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 15px;
+            background-color: #f0f0f0;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background-color: #e0e0e0;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .output-text {
+            min-height: 120px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fafafa;
+            color: #333;
+            font-size: 16px;
+            word-wrap: break-word;
+        }
+
+        .copy-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 100;
+        }
+
+        .notification.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .converter-box {
+                padding: 20px;
+            }
+
+            button {
+                min-width: 100px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Text Case Converter</h1>
+            <p class="subtitle">Convert text between different cases instantly</p>
+        </header>
+
+        <div class="converter-box">
+            <div class="input-section">
+                <div class="section-title">Enter your text:</div>
+                <textarea id="inputText" placeholder="Type or paste your text here..."></textarea>
+            </div>
+
+            <div class="buttons-container">
+                <button onclick="convertToUpperCase()">UPPERCASE</button>
+                <button onclick="convertToLowerCase()">lowercase</button>
+                <button onclick="convertToTitleCase()">Title Case</button>
+                <button onclick="convertToSentenceCase()">Sentence case</button>
+                <button onclick="convertToAlternatingCase()">aLtErNaTiNg</button>
+                <button onclick="convertToInverseCase()">InVeRsE</button>
+            </div>
+
+            <div class="output-section">
+                <div class="section-title">Converted text:</div>
+                <div id="outputText" class="output-text">Your converted text will appear here...</div>
+                <button class="copy-btn" onclick="copyToClipboard()">
+                    <span>Copy to Clipboard</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        Made with ❤️ by Sauravhhh
+    </footer>
+
+    <div id="notification" class="notification">Text copied to clipboard!</div>
+
+    <script>
+        function convertToUpperCase() {
+            const input = document.getElementById('inputText').value;
+            document.getElementById('outputText').textContent = input.toUpperCase();
+        }
+
+        function convertToLowerCase() {
+            const input = document.getElementById('inputText').value;
+            document.getElementById('outputText').textContent = input.toLowerCase();
+        }
+
+        function convertToTitleCase() {
+            const input = document.getElementById('inputText').value;
+            document.getElementById('outputText').textContent = input.replace(/\w\S*/g, function(txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+        }
+
+        function convertToSentenceCase() {
+            const input = document.getElementById('inputText').value;
+            document.getElementById('outputText').textContent = input.replace(/(^\w{1}|\.\s*\w{1})/gi, function(txt) {
+                return txt.toUpperCase();
+            });
+        }
+
+        function convertToAlternatingCase() {
+            const input = document.getElementById('inputText').value;
+            let result = '';
+            for (let i = 0; i < input.length; i++) {
+                if (i % 2 === 0) {
+                    result += input[i].toLowerCase();
+                } else {
+                    result += input[i].toUpperCase();
+                }
+            }
+            document.getElementById('outputText').textContent = result;
+        }
+
+        function convertToInverseCase() {
+            const input = document.getElementById('inputText').value;
+            let result = '';
+            for (let i = 0; i < input.length; i++) {
+                if (input[i] === input[i].toLowerCase()) {
+                    result += input[i].toUpperCase();
+                } else {
+                    result += input[i].toLowerCase();
+                }
+            }
+            document.getElementById('outputText').textContent = result;
+        }
+
+        function copyToClipboard() {
+            const outputText = document.getElementById('outputText').textContent;
+            navigator.clipboard.writeText(outputText).then(() => {
+                const notification = document.getElementById('notification');
+                notification.classList.add('show');
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
